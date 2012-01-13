@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>10.0.0</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{EAFD95C5-1396-4B2A-B7AA-98A9C01BE66E}</ProjectGuid>
+    <ProjectTypeGuids>{6BC8ED88-2882-458C-8E55-DFD12B67127B};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <RootNamespace>MonoTouch.WAToolkit.Library</RootNamespace>
+    <AssemblyName>MonoTouch.WAToolkit.Library</AssemblyName>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug</OutputPath>
+    <DefineConstants>DEBUG;</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>none</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Release</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Core" />
+    <Reference Include="monotouch" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel.Web" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Web.Services" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <ItemGroup>
+    <Folder Include="EventArguments\" />
+    <Folder Include="Utilities\" />
+    <Folder Include="Login\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Utilities\IdentityProviderInformation.cs" />
+    <Compile Include="Utilities\SerializationHelper.cs" />
+    <Compile Include="Utilities\RequestSecurityTokenResponseStore.cs" />
+    <Compile Include="Utilities\RequestSecurityTokenResponse.cs" />
+    <Compile Include="Utilities\JSONIdentityProviderDiscoveryClient.cs" />
+    <Compile Include="EventArguments\RequestSecurityTokenResponseEventArgs.cs" />
+    <Compile Include="EventArguments\GetIdentityProviderListEventArgs.cs" />
+    <Compile Include="EventArguments\IdentityProviderInformationEventArgs.cs" />
+    <Compile Include="Login\AccessControlLoginController.cs" />
+    <Compile Include="Login\AccessControlWebAuthController.cs" />
+  </ItemGroup>
+</Project>
