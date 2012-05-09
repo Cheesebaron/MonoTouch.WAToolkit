@@ -43,7 +43,7 @@ namespace MonoTouch.WAToolkit.Library.Login
 		{
 			base.ViewDidLoad ();
 			
-			this.Title = "Log in";
+			this.Title = "Providers";
 			
 			TableView.DataSource = new AccessControlLoginDataSource(null);
 			TableView.Delegate = new AccessControlLoginDelegate(this, null);
