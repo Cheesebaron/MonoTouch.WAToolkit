@@ -4,7 +4,7 @@ This is a project attempting to port the [Windows Phone 7 Windows Azure toolkit]
 It supports authenticating against Windows Azure and can obtain a token response for usage with applications that require this.
 
 How does it work?
-_______
+-------
 The supplied sample briefly shows how to use the components. What happens in the code is:
 
 1. Passing the realm and namespace to the `AccessControlLoginController` and pushing the view sends you to a list of Identity Providers to choose from.
