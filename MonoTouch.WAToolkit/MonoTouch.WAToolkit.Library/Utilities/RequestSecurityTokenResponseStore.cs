@@ -26,8 +26,8 @@ namespace MonoTouch.WAToolkit.Library.Utilities
     {
         private static readonly RequestSecurityTokenResponseStore instance = new RequestSecurityTokenResponseStore();
 
-        private static string settingsDir = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
-        private const string settingsFile = "monodroid.watoolkit.library.RequestSecurityTokenResponse.xml";
+        private static readonly string SettingsDir = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
+        private const string SettingsFile = "monodroid.watoolkit.library.RequestSecurityTokenResponse.xml";
 
         private RequestSecurityTokenResponseStore() { }
 
@@ -47,11 +47,11 @@ namespace MonoTouch.WAToolkit.Library.Utilities
         {
             get
             {
-                return RetrieveSettingFromFile<RequestSecurityTokenResponse>(settingsDir, settingsFile);
+                return RetrieveSettingFromFile<RequestSecurityTokenResponse>(SettingsDir, SettingsFile);
             }
             set
             {
-                SaveSettingToFile<RequestSecurityTokenResponse>(settingsDir, settingsFile, value);
+                SaveSettingToFile(SettingsDir, SettingsFile, value);
             }
         }
 
@@ -74,7 +74,7 @@ namespace MonoTouch.WAToolkit.Library.Utilities
         /// otherwise retruns false</remarks>
         public bool ContainsValidRequestSecurityTokenResponse()
         {
-            if ( null == this.RequestSecurityTokenResponse )
+            if ( null == RequestSecurityTokenResponse )
             {
                 return false;
             }            
@@ -84,7 +84,7 @@ namespace MonoTouch.WAToolkit.Library.Utilities
 
         private T RetrieveSettingFromFile<T>(string dir, string file) where T : class
         {
-            string fn = System.IO.Path.Combine(dir, file);
+            var fn = Path.Combine(dir, file);
 
             if (File.Exists(fn))
             {
@@ -105,7 +105,7 @@ namespace MonoTouch.WAToolkit.Library.Utilities
 
         private void SaveSettingToFile<T>(string dir, string file, T data)
         {
-            string fn = System.IO.Path.Combine(dir, file);
+            var fn = Path.Combine(dir, file);
 
             if (null == data)
             {

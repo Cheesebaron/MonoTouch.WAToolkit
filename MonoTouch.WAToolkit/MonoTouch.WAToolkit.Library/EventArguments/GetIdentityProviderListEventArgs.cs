@@ -40,8 +40,8 @@ namespace MonoTouch.WAToolkit.Library.EventArguments
 {
     internal class GetIdentityProviderListEventArgs : EventArgs
     {
-        private Exception _error;
-        private IEnumerable<IdentityProviderInformation> _identityProviders;
+        private readonly Exception _error;
+        private readonly IEnumerable<IdentityProviderInformation> _identityProviders;
 
         internal GetIdentityProviderListEventArgs(IEnumerable<IdentityProviderInformation> identityProviders, Exception e)
         { 

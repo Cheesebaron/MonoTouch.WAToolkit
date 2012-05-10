@@ -32,7 +32,6 @@
 // permissions and limitations under the License.
 //---------------------------------------------------------------------------------
 
-using System;
 using System.Runtime.Serialization;
 using System.Collections.Generic;
 
@@ -108,7 +107,7 @@ namespace MonoTouch.WAToolkit.Library.Utilities
 
         public override string ToString()
         {
-            return string.Format("Name: {0}, LoginUrl: {1}, LogoutUrl: {2}, ImageUrl: {3}, EmailAddressSuffixes: {4}", Name, LoginUrl, LogoutUrl, ImageUrl, EmailAddressSuffixes.ToString());
+            return string.Format("Name: {0}, LoginUrl: {1}, LogoutUrl: {2}, ImageUrl: {3}, EmailAddressSuffixes: {4}", Name, LoginUrl, LogoutUrl, ImageUrl, EmailAddressSuffixes);
         }
     }
 }

@@ -15,55 +15,58 @@
 //---------------------------------------------------------------------------------
 
 using System;
-using System.Web;
 using System.Drawing;
 using System.Text;
 using MonoTouch.UIKit;
 using MonoTouch.Foundation;
 using MonoTouch.WAToolkit.Library.Utilities;
 
-namespace MonoTouch.WAToolkit.Library
+namespace MonoTouch.WAToolkit.Library.Login
 {
 	public class AccessControlWebAuthController : UIViewController
 	{
-		public NSUrl _url;
-		public UIWebView _webView;
+		public NSUrl Url;
+		public UIWebView WebView;
 		public string ScriptNotify = "<script type=\"text/javascript\">window.external = { 'Notify': function(s) { document.location = 'acs://settoken?token=' + s; }, 'notify': function(s) { document.location = 'acs://settoken?token=' + s; } };</script>";
 		
 		public AccessControlWebAuthController (string loginUrl)
 		{
-			this._url = new NSUrl(loginUrl);
+			Url = new NSUrl(loginUrl);
 		}
 		
 		public override void LoadView ()
 		{
 			base.LoadView ();
-			var webFrame = new RectangleF(0, 0, View.Frame.Width, View.Frame.Height - this.NavigationController.NavigationBar.Frame.Height);
-			_webView = new UIWebView(webFrame);
+			var webFrame = new RectangleF(0, 0, View.Frame.Width, View.Frame.Height - NavigationController.NavigationBar.Frame.Height);
+			WebView = new UIWebView(webFrame);
 			
-			var urlRequest = new NSUrlRequest(_url);
+			var urlRequest = new NSUrlRequest(Url);
 			
-			_webView.LoadRequest(urlRequest);
-			_webView.ScalesPageToFit = true;
+			WebView.LoadRequest(urlRequest);
+			WebView.ScalesPageToFit = true;
 			
-			_webView.Delegate = new AccessControlWebAuthDelegate(this);
+			WebView.Delegate = new AccessControlWebAuthDelegate(this);
 			
-			View.AddSubview(_webView);
+			View.AddSubview(WebView);
 		}
 		
 		public override void ViewDidLoad ()
 		{
 			base.ViewDidLoad ();
-			this.NavigationItem.RightBarButtonItem = null;
+			NavigationItem.RightBarButtonItem = null;
 			
 		}
 		
+/*
 		private void ShowProgress()
 		{
-			UIActivityIndicatorView view = new UIActivityIndicatorView(UIActivityIndicatorViewStyle.White);
-			view.Frame = new RectangleF(0,0, 32, 32);
-			this.NavigationItem.RightBarButtonItem = new UIBarButtonItem(view);
+		    var view = new UIActivityIndicatorView(UIActivityIndicatorViewStyle.White)
+		    {
+		        Frame = new RectangleF(0, 0, 32, 32)
+		    };
+		    NavigationItem.RightBarButtonItem = new UIBarButtonItem(view);
 		}
+*/
 		
 		public override bool ShouldAutorotateToInterfaceOrientation (UIInterfaceOrientation toInterfaceOrientation)
 		{
@@ -73,38 +76,41 @@ namespace MonoTouch.WAToolkit.Library
 	
 	public class AccessControlWebAuthDelegate : UIWebViewDelegate
 	{
-		private AccessControlWebAuthController controller;
-		private AccessControlWebAuthConnectionDelegate urlDelegate;
+		private readonly AccessControlWebAuthController _controller;
+		private readonly AccessControlWebAuthConnectionDelegate _urlDelegate;
 		
 		public AccessControlWebAuthDelegate(AccessControlWebAuthController controller) 
 		{
-			this.controller = controller;
-			urlDelegate = new AccessControlWebAuthConnectionDelegate(controller);
+			_controller = controller;
+			_urlDelegate = new AccessControlWebAuthConnectionDelegate(controller);
 		}
 		
 		public override bool ShouldStartLoad (UIWebView webView, NSUrlRequest request, UIWebViewNavigationType navigationType)
 		{
-			if (null != controller && controller._url != null)
+			if (null != _controller && _controller.Url != null)
 			{
-				if (request.Url.Equals(controller._url))
+				if (request.Url.Equals(_controller.Url))
 					return true;
 			}
-			
-			controller._url = request.Url;
-			string scheme = controller._url.Scheme;
 
-			if (scheme.Equals("acs"))
-			{
-				StringBuilder b = new StringBuilder(Uri.UnescapeDataString(request.Url.ToString()));
-				b.Replace("acs://settoken?token=", string.Empty);
+		    if (_controller != null)
+		    {
+		        _controller.Url = request.Url;
+
+		        var scheme = _controller.Url.Scheme;
+
+		        if (scheme.Equals("acs"))
+		        {
+		            var b = new StringBuilder(Uri.UnescapeDataString(request.Url.ToString()));
+		            b.Replace("acs://settoken?token=", string.Empty);
 				
-				RequestSecurityTokenResponse token = RequestSecurityTokenResponse.FromJSON(b.ToString());
-				RequestSecurityTokenResponseStore.Instance.RequestSecurityTokenResponse = token;
+		            RequestSecurityTokenResponseStore.Instance.RequestSecurityTokenResponse = RequestSecurityTokenResponse.FromJSON(b.ToString());
 				
-				controller.NavigationController.PopToRootViewController(true);
-			}
-			
-			NSUrlConnection.FromRequest(request, urlDelegate);
+		            _controller.NavigationController.PopToRootViewController(true);
+		        }
+		    }
+
+		    NSUrlConnection.FromRequest(request, _urlDelegate);
 			
 			return false;
 		}
@@ -130,20 +136,17 @@ namespace MonoTouch.WAToolkit.Library
 	
 	public class AccessControlWebAuthConnectionDelegate : NSUrlConnectionDelegate
 	{
-		private AccessControlWebAuthController controller;
+		private readonly AccessControlWebAuthController _controller;
 		private NSMutableData _data;
 		
 		public AccessControlWebAuthConnectionDelegate(AccessControlWebAuthController controller)
 		{
-			this.controller = controller;
+			_controller = controller;
 		}
 		
 		public override void FailedWithError (NSUrlConnection connection, NSError error)
 		{
-			if (_data != null) 
-			{
-        		_data = null;
-    		}
+        	_data = null;
 		}
 		
 		public override void ReceivedData (NSUrlConnection connection, NSData data)
@@ -157,12 +160,12 @@ namespace MonoTouch.WAToolkit.Library
 		{
 			if (_data != null)
 			{
-				string scriptNotifyAndContent = controller.ScriptNotify;
+				string scriptNotifyAndContent = _controller.ScriptNotify;
 				scriptNotifyAndContent += NSString.FromData(_data, NSStringEncoding.UTF8).ToString();
 				
 				_data = null;
 				
-				controller._webView.LoadHtmlString(scriptNotifyAndContent, controller._url);
+				_controller.WebView.LoadHtmlString(scriptNotifyAndContent, _controller.Url);
 			}
 		}
 	}

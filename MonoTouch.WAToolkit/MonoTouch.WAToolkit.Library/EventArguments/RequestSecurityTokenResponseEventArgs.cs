@@ -20,8 +20,8 @@ namespace MonoTouch.WAToolkit.Library.EventArguments
 {
     public class RequestSecurityTokenResponseEventArgs : EventArgs
     {
-        Exception _error;
-        String _response;
+        readonly Exception _error;
+        readonly String _response;
 
         internal RequestSecurityTokenResponseEventArgs(String requestSecurityTokenResponse, Exception error)
         {

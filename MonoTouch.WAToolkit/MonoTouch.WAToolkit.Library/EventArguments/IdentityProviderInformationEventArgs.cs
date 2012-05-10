@@ -44,7 +44,7 @@ namespace MonoTouch.WAToolkit.Library.EventArguments
     {
         internal IdentityProviderInformationEventArgs(IdentityProviderInformation identityProvider)
         {
-            this.IdentityProviderInformation = identityProvider;
+            IdentityProviderInformation = identityProvider;
         }
 
         /// <summary>

@@ -24,7 +24,7 @@ namespace MonoTouch.WAToolkit.Library.Utilities
     {
         public static void SerializeData<T>(T data, Stream stream)
         {
-            XmlSerializer ser = new XmlSerializer(typeof(T));
+            var ser = new XmlSerializer(typeof(T));
             ser.Serialize(stream, data);
         }
 
@@ -32,7 +32,7 @@ namespace MonoTouch.WAToolkit.Library.Utilities
             where T : class
         {
             if (stream == null) throw new ArgumentNullException("stream");
-            XmlSerializer ser = new XmlSerializer(typeof(T));
+            var ser = new XmlSerializer(typeof(T));
             return (T)ser.Deserialize(stream);
         }
     }

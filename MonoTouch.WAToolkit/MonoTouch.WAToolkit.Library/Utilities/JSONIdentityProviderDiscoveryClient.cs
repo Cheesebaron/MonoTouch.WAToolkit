@@ -34,8 +34,8 @@
 
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Net;
 using System.Runtime.Serialization.Json;
@@ -60,7 +60,7 @@ namespace MonoTouch.WAToolkit.Library.Utilities
 
         internal void GetIdentityProviderListAsync(Uri identityProviderListServiceEndpoint)
         {
-            var request = (HttpWebRequest)HttpWebRequest.Create(identityProviderListServiceEndpoint);
+            var request = (HttpWebRequest)WebRequest.Create(identityProviderListServiceEndpoint);
             var state = new StateBag { Request = request, Callback = ParseJson };
             request.BeginGetResponse(DownloadStreamCompleted, state);
 			
@@ -76,9 +76,9 @@ namespace MonoTouch.WAToolkit.Library.Utilities
                 var response = state.Request.EndGetResponse(result);
                 using (var stream = response.GetResponseStream())
                 {
-                    using (StreamReader reader = new StreamReader(stream))
+                    using (var reader = new StreamReader(stream))
                     {
-                        string text = reader.ReadToEnd();
+                        var text = reader.ReadToEnd();
                         state.Callback(null, text);
                     }
                 }
@@ -97,21 +97,21 @@ namespace MonoTouch.WAToolkit.Library.Utilities
         private void ParseJson(Exception e, string json)
         {
             IEnumerable<IdentityProviderInformation> identityProviders = null;
-            Exception error = e;
+            var error = e;
 
             if (null == e)
             {
                 try
                 {
-                    using (MemoryStream ms = new MemoryStream(Encoding.Unicode.GetBytes(json)))
+                    using (var ms = new MemoryStream(Encoding.Unicode.GetBytes(json)))
                     {
-                        DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(IEnumerable<IdentityProviderInformation>));
+                        var serializer = new DataContractJsonSerializer(typeof(IEnumerable<IdentityProviderInformation>));
                         identityProviders = serializer.ReadObject(ms) as IEnumerable<IdentityProviderInformation>;
-                        
-                        IdentityProviderInformation windowsLiveId = identityProviders.FirstOrDefault(i => i.Name.Equals("Windows Live™ ID", StringComparison.InvariantCultureIgnoreCase));
+
+                        var windowsLiveId = identityProviders.FirstOrDefault(i => i.Name.Equals("Windows Live™ ID", StringComparison.InvariantCultureIgnoreCase));
                         if (windowsLiveId != null)
                         {
-                            string separator = windowsLiveId.LoginUrl.Contains("?") ? "&" : "?";
+                            var separator = windowsLiveId.LoginUrl.Contains("?") ? "&" : "?";
                             windowsLiveId.LoginUrl = string.Format(CultureInfo.InvariantCulture, "{0}{1}pcexp=false", windowsLiveId.LoginUrl, separator);
                         }
                     }

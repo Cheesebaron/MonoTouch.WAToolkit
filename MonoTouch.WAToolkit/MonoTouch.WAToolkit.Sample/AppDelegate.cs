@@ -14,7 +14,6 @@
 // permissions and limitations under the License.
 //---------------------------------------------------------------------------------
 
-using System;
 using MonoTouch.Foundation;
 using MonoTouch.UIKit;
 
@@ -27,8 +26,8 @@ namespace MonoTouch.WAToolkit.Sample
 	public partial class AppDelegate : UIApplicationDelegate
 	{
 		// class-level declarations
-		UIWindow window;
-		UINavigationController rootNavigationController;
+		UIWindow _window;
+		UINavigationController _rootNavigationController;
 
 		//
 		// This method is invoked when the application has loaded and is ready to run. In this 
@@ -40,18 +39,18 @@ namespace MonoTouch.WAToolkit.Sample
 		public override bool FinishedLaunching (UIApplication app, NSDictionary options)
 		{
 			// create a new window instance based on the screen size
-			window = new UIWindow (UIScreen.MainScreen.Bounds);
+			_window = new UIWindow (UIScreen.MainScreen.Bounds);
 			
-			LoginSampleController login = new LoginSampleController();
+			var login = new LoginSampleController();
 			
-			rootNavigationController = new UINavigationController();
-			this.window.RootViewController = this.rootNavigationController;
+			_rootNavigationController = new UINavigationController();
+			_window.RootViewController = _rootNavigationController;
 
-			rootNavigationController.PushViewController(login, false);
-			rootNavigationController.Title = "Log in";
+			_rootNavigationController.PushViewController(login, false);
+			_rootNavigationController.Title = "Log in";
 			
 			// make the window visible
-			window.MakeKeyAndVisible ();
+			_window.MakeKeyAndVisible ();
 			
 			return true;
 		}

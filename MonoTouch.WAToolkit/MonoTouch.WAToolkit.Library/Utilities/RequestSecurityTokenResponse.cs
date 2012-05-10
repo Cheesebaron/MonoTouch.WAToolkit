@@ -38,8 +38,6 @@ using System.IO;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Json;
 using System.Text;
-using System.Net;
-using System.Xml.Linq;
 using System.Xml;
 using System.Web;
 
@@ -51,13 +49,13 @@ namespace MonoTouch.WAToolkit.Library.Utilities
     [DataContract]
     public class RequestSecurityTokenResponse
     {
-        static string wsSecuritySecExtNamespace = "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd";
-        static string binarySecurityTokenName = "BinarySecurityToken";
+        private const string WsSecuritySecExtNamespace = "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd";
+        private const string BinarySecurityTokenName = "BinarySecurityToken";
 
-        string _token = null;
-        string _tokenType = null;
-        long _tokenExpiration = 0;
-        long _tokenCreated = 0;
+        string _token;
+        string _tokenType;
+        long _tokenExpiration;
+        long _tokenCreated;
 
         /// <summary>
         /// The raw string value of the security token contained in the RequestSecurityTokenResponse
@@ -125,44 +123,41 @@ namespace MonoTouch.WAToolkit.Library.Utilities
 
         internal static RequestSecurityTokenResponse FromJSON(string jsonRequestSecurityTokenService)
         {
-            RequestSecurityTokenResponse returnToken;
-
-            MemoryStream memoryStream = new MemoryStream(Encoding.UTF8.GetBytes(jsonRequestSecurityTokenService));
-            DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(RequestSecurityTokenResponse));
-            returnToken = serializer.ReadObject(memoryStream) as RequestSecurityTokenResponse;
-
-            returnToken.securityToken = HttpUtility.HtmlDecode( returnToken.securityToken );
-
-            using ( StringReader sr = new StringReader( returnToken.securityToken ) )
+            using (var memoryStream = new MemoryStream(Encoding.UTF8.GetBytes(jsonRequestSecurityTokenService)))
             {
-                using ( XmlReader reader = XmlReader.Create( sr ) )
+                var serializer = new DataContractJsonSerializer(typeof(RequestSecurityTokenResponse));
+                var returnToken = serializer.ReadObject(memoryStream) as RequestSecurityTokenResponse;
+
+                if (null != returnToken)
                 {
-                    reader.MoveToContent();                    
-                    string binaryToken = reader.ReadElementContentAsString( binarySecurityTokenName, wsSecuritySecExtNamespace );
-                    byte[] tokenBytes = Convert.FromBase64String(binaryToken);
-                    returnToken._token = Encoding.UTF8.GetString(tokenBytes, 0, tokenBytes.Length);
+                    returnToken.securityToken = HttpUtility.HtmlDecode( returnToken.securityToken );
+
+                    using ( var sr = new StringReader( returnToken.securityToken ) )
+                    {
+                        using ( var reader = XmlReader.Create( sr ) )
+                        {
+                            reader.MoveToContent();                    
+                            var binaryToken = reader.ReadElementContentAsString( BinarySecurityTokenName, WsSecuritySecExtNamespace );
+                            var tokenBytes = Convert.FromBase64String(binaryToken);
+                            returnToken._token = Encoding.UTF8.GetString(tokenBytes, 0, tokenBytes.Length);
+                        }
+                    }
                 }
+                return returnToken;
             }
-
-            memoryStream.Close();
-
-            return returnToken;
         }
 
         public bool IsExpired
         {
             get
             {
-                bool result = true;
+                var result = true;
                 if (expires > 0)
                 {
-                    long now = ConvertToUnixTimestamp(DateTime.UtcNow);
-                    long diff = now - expires;
+                    var now = ConvertToUnixTimestamp(DateTime.UtcNow);
+                    var diff = now - expires;
 
-                    if (diff < 0)
-                        result = false;
-                    else
-                        result = true;
+                    result = diff >= 0;
                 }
                 return result;
             }
@@ -170,8 +165,8 @@ namespace MonoTouch.WAToolkit.Library.Utilities
 
         static long ConvertToUnixTimestamp(DateTime date)
         {
-            DateTime origin = new DateTime(1970, 1, 1, 0, 0, 0, 0);
-            TimeSpan diff = date - origin;
+            var origin = new DateTime(1970, 1, 1, 0, 0, 0, 0);
+            var diff = date - origin;
             return (long)Math.Floor(diff.TotalSeconds);
         }
 

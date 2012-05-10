@@ -1,29 +1,19 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="MonoTouch.WAToolkit.Sample/AppDelegate.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="MonoTouch.WAToolkit.Library/Login/AccessControlLoginController.cs">
     <Files>
-      <File FileName="MonoTouch.WAToolkit.Library/Login/Controllers/AccessControlLoginController.cs" Line="46" Column="52" />
-      <File FileName="MonoTouch.WAToolkit.Library/Login/DataSources/AccessControlLoginDataSource.cs" Line="1" Column="1" />
-      <File FileName="MonoTouch.WAToolkit.Library/Login/Delegates/AccessControlLoginDelegate.cs" Line="18" Column="19" />
-      <File FileName="MonoTouch.WAToolkit.Library/Login/Controllers/AccessControlWebAuthController.cs" Line="1" Column="1" />
-      <File FileName="MonoTouch.WAToolkit.Library/Utilities/IdentityProviderInformation.cs" Line="1" Column="1" />
-      <File FileName="MonoTouch.WAToolkit.Sample/AppDelegate.cs" Line="30" Column="4" />
+      <File FileName="MonoTouch.WAToolkit.Library/Login/AccessControlLoginController.cs" Line="43" Column="3" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
-        <State expanded="True">
+        <State expanded="True" selected="True">
           <Node name="MonoTouch.WAToolkit.Library" expanded="True">
             <Node name="EventArguments" expanded="True" />
-            <Node name="Login" expanded="True">
-              <Node name="Controllers" expanded="True" />
-              <Node name="DataSources" expanded="True" />
-              <Node name="Delegates" expanded="True" />
-            </Node>
+            <Node name="Login" expanded="True" />
             <Node name="Utilities" expanded="True" />
           </Node>
           <Node name="MonoTouch.WAToolkit.Sample" expanded="True">
             <Node name="References" expanded="True" />
-            <Node name="AppDelegate.cs" selected="True" />
           </Node>
         </State>
       </Pad>
